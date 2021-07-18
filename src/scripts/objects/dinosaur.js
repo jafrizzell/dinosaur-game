@@ -1,7 +1,7 @@
 (function(namespace) {
 	var STEP_SPEED = 0.02;
 	var JUMP_DISTANCE = 350;
-	var JUMP_HEIGHT = 100;
+	var JUMP_HEIGHT = 150;
 
 	function Dinosaur(options) {
 		this.scale = options.scale;
@@ -9,6 +9,9 @@
 		this.y = options.bottom;
 		this.colour = options.colour;
 		this.jumpStart = null;
+		this.jumpStartTime = 0;
+		this.gravity = 1400;
+		this.initYVel = 600;
 	}
 
 	Dinosaur.prototype = Object.create(GameObject.prototype);
@@ -25,19 +28,22 @@
 
 	Dinosaur.prototype.startJump = function(offset) {
 		this.jumpStart = offset;
+		this.jumpStartTime = Date.now();
 	};
 
 	Dinosaur.prototype.jumpHeight = function (offset) {
 		var distanceRemaining = this.jumpDistanceRemaining(offset);
+		var timeDiff = (Date.now() - this.jumpStartTime)/1000;
+		console.log(timeDiff);
+
 		if (distanceRemaining > 0) {
 			var maxPoint = JUMP_DISTANCE / 2;
 
-			// get a number between 0 and 1 (-x^2)
-			if (distanceRemaining > maxPoint) {
-				var arcPos = -1 * Math.pow(distanceRemaining/maxPoint - 1, 2) + 1;
-			}
-			else {var arcPos = Math.pow((maxPoint-distanceRemaining)/maxPoint - 1 , 2);}
-			return JUMP_HEIGHT * arcPos;
+			y_pos =  -1 * this.gravity / 2 * Math.pow(timeDiff, 2) + this.initYVel * timeDiff;
+
+
+			// var arcPos = ((110.205 * (Math.pow((distanceRemaining-maxPoint)/JUMP_HEIGHT), 2)) + JUMP_HEIGHT)/JUMP_HEIGHT;
+			return y_pos;
 		}
 		return 0;
 	};

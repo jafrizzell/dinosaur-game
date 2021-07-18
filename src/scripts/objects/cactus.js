@@ -19,7 +19,7 @@
 			scale = this.scale;
 
 		const emote = this.emoteGroup.emotes[0];
-		context.drawImage(emote.gif.canvas, x, y-56, 56, 56);
+		context.drawImage(emote.gif.canvas, x, y-56, 50*scale, 50*scale);
 		context.fillStyle = this.colour;
 
 	};

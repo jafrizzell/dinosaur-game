@@ -94,12 +94,12 @@ import Chat from "twitch-chat-emotes";
 	Game.prototype.updateCacti = function() {
 		if (emoteArray.length > 1) {
 			while (this.offset > this.nextCactus) {
-				var count = Math.floor(rand(1, 3.9)),
+				var count = Math.floor(rand(1, 4.9)),
 					scale = rand(0.8, 1.5),
 					x = this.canvas.width + this.offset + SCREEN_BUFFER;
 	
 				while (count--) {
-					const emoteGroup = emoteArray[0];
+					const emoteGroup = emoteArray[emoteArray.length-1];
 					this.cacti.push(new Cactus({
 						emoteGroup, 
 						left: x + (count * 20 * scale), 
