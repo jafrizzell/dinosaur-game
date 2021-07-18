@@ -1,3 +1,5 @@
+import Chat from "twitch-chat-emotes";
+
 (function(namespace) {
 	var DEFAULT_COLOUR = "#444";
 	var BACKGROUND_COLOUR = "#EEE";
@@ -7,6 +9,18 @@
 	var GROUND_BUFFER = 10;
 	var SPACE_BAR_CODE = 32;
 	var MIN_CACTUS_DISTANCE = 400;
+	const emoteArray = [];
+	let channels = ['moonmoon'];
+
+
+	// the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
+	const query_vars = {};
+	const query_parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+		query_vars[key] = value;
+	});
+	if (query_vars.channels) {
+		channels = query_vars.channels.split(',');
+	}
 
 	var spacePressed = false;
 	function keydown(e) {
@@ -25,6 +39,21 @@
 	document.addEventListener('keyup', keyup, false);
 
 	function Game(options) {
+		const ChatInstance = new Chat({
+			channels,
+			duplicateEmoteLimit: 5,
+			maximumEmoteLimit: 1,
+		})
+
+		ChatInstance.on('emotes', (emotes) => {
+			if (emoteArray.length > 20) {
+				emoteArray.shift();
+			}
+			emoteArray.push({
+				emotes
+			});
+		})
+
 		this.canvas = options.el;
 		this.context = this.canvas.getContext("2d");
 
@@ -34,7 +63,6 @@
 		this.lastTick = null;
 		this.running = false;
 		this.finished = false;
-
 		this.initObjects();
 		this.draw();
 		requestAnimationFrame(this.step.bind(this));
@@ -64,24 +92,28 @@
 	};
 
 	Game.prototype.updateCacti = function() {
-		while (this.offset > this.nextCactus) {
-			var count = Math.floor(rand(1, 3.9)),
-				scale = rand(0.8, 1.5),
-				x = this.canvas.width + this.offset + SCREEN_BUFFER;
-
-			while (count--) {
-				this.cacti.push(new Cactus({
-					left: x + (count * 20 * scale), 
-					bottom: this.canvas.height - GROUND_BUFFER,
-					scale: scale, 
-					leftSize: rand(0.5, 1.5), 
-					rightSize: rand(0.5, 1.5), 
-					centerSize: rand(0.5, 1.5),
-					colour: DEFAULT_COLOUR
-				}));
+		if (emoteArray.length > 1) {
+			while (this.offset > this.nextCactus) {
+				var count = Math.floor(rand(1, 3.9)),
+					scale = rand(0.8, 1.5),
+					x = this.canvas.width + this.offset + SCREEN_BUFFER;
+	
+				while (count--) {
+					const emoteGroup = emoteArray[0];
+					this.cacti.push(new Cactus({
+						emoteGroup, 
+						left: x + (count * 20 * scale), 
+						bottom: this.canvas.height - GROUND_BUFFER,
+						scale: scale,
+						leftSize: rand(0.5, 1.5), 
+						rightSize: rand(0.5, 1.5), 
+						centerSize: rand(0.5, 1.5),
+						colour: DEFAULT_COLOUR
+					}));
+				}
+	
+				this.nextCactus = this.offset + rand(MIN_CACTUS_DISTANCE, this.canvas.width);
 			}
-
-			this.nextCactus = this.offset + rand(MIN_CACTUS_DISTANCE, this.canvas.width);
 		}
 	};
 
