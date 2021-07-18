@@ -1,3 +1,6 @@
+import Chat from "twitch-chat-emotes";
+window.Chat = Chat;
+
 import './scripts/helpers.js'
 import './scripts/objects/game-object.js'
 import './scripts/objects/cactus.js'
