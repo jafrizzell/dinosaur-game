@@ -54,14 +54,6 @@
 			offsetY = this.y - this.jumpHeight(offset),
 			y = offsetY;
 
-		// background spacer
-		// context.fillStyle = backgroundColour;
-		// context.fillRect(x + 7, y - 14, 22, 18);
-
-		// fix backgroudn horizon line
-		context.fillStyle = "#000000";
-		context.fillRect(0, this.height-10, 500, 1);
-
 		context.fillStyle = "#514f59";
 		
 		// front arm
@@ -182,17 +174,6 @@
 			width: 24,
 			height: 48
 		}, 
-		//{
-		// 	x: this.x + offset,
-		// 	y: y + 2,
-		// 	width: 15,
-		// 	height: 20
-		// }, {
-		// 	x: this.x + offset + 30,
-		// 	y: y - 34,
-		// 	width: 25,
-		// 	height: 20
-		// }
 	];
 	};
 

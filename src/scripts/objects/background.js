@@ -24,7 +24,9 @@
 	Background.prototype.constructor = Background;
 
 	Background.prototype.draw = function(context, offset) {
-		context.fillStyle = this.colour;
+		context.fillStyle = "#697580";
+		context.fillRect(0, this.height-20, this.width, this.height+20);
+		context.fillStyle = '#000000';
 		context.fillRect(0, this.height - 20, this.width, 1);
 
 		for (var i = this.bits.length - 1; i >= 0; i--) {

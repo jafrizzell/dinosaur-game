@@ -1,17 +1,17 @@
 import Chat from "twitch-chat-emotes";
 
 (function(namespace) {
-	var DEFAULT_COLOUR = "#444";
-	var BACKGROUND_COLOUR = "#EEE";
+	var DEFAULT_COLOUR = "#697580";
+	var BACKGROUND_COLOUR = "#1D2E3E";
 	var OFFSET_SPEED = 0.4;
 	var MAX_TIME_TICK = 1000 / 60;
 	var SCREEN_BUFFER = 50;
-	var GROUND_BUFFER = 10;
+	var GROUND_BUFFER = 100;
 	var SPACE_BAR_CODE = 32;
 	var MIN_CACTUS_DISTANCE = 400;
 	var MAX_CACTUS_DISTANCE = 700;
 	const emoteArray = [];
-	let channels = ['moonmoon'];
+	let channels = ['moonmoon','a_seagull', 'pokimane'];
 
 
 	// the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
@@ -84,7 +84,7 @@ import Chat from "twitch-chat-emotes";
 		this.background = new Background({
 			context: this.context, 
 			width: this.canvas.width, 
-			height: this.canvas.height,
+			height: this.canvas.height - GROUND_BUFFER,
 			colour: DEFAULT_COLOUR
 		});
 
@@ -99,8 +99,8 @@ import Chat from "twitch-chat-emotes";
 	Game.prototype.updateCacti = function() {
 		if (emoteArray.length > 1) {
 			while (this.offset > this.nextCactus) {
-				var count = Math.floor(rand(1, 4.9)),
-					scale = rand(0.8, 1.5),
+				var count = Math.floor(rand(1, 1.9)),
+					scale = rand(0.7, 1.4),
 					x = this.canvas.width + this.offset + SCREEN_BUFFER;
 	
 				while (count--) {
@@ -109,6 +109,7 @@ import Chat from "twitch-chat-emotes";
 						emoteGroup, 
 						left: x + (count * 20 * scale), 
 						bottom: this.canvas.height - GROUND_BUFFER,
+						buffer: GROUND_BUFFER,
 						scale: scale,
 						leftSize: rand(0.5, 1.5), 
 						rightSize: rand(0.5, 1.5), 
@@ -171,7 +172,6 @@ import Chat from "twitch-chat-emotes";
 
 			for (var i = 0; i < this.cacti.length; i++) { 
 				if ((this.cacti[i].x - this.offset) < 90 && this.cacti[i].x > 0) {
-					console.log(Math.abs(this.cacti[i].x - this.offset));
 					auto_jump();
 
 				}
