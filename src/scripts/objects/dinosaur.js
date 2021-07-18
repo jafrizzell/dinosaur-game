@@ -34,15 +34,8 @@
 	Dinosaur.prototype.jumpHeight = function (offset) {
 		var distanceRemaining = this.jumpDistanceRemaining(offset);
 		var timeDiff = (Date.now() - this.jumpStartTime)/1000;
-		console.log(timeDiff);
-
 		if (distanceRemaining > 0) {
-			var maxPoint = JUMP_DISTANCE / 2;
-
 			y_pos =  -1 * this.gravity / 2 * Math.pow(timeDiff, 2) + this.initYVel * timeDiff;
-
-
-			// var arcPos = ((110.205 * (Math.pow((distanceRemaining-maxPoint)/JUMP_HEIGHT), 2)) + JUMP_HEIGHT)/JUMP_HEIGHT;
 			return y_pos;
 		}
 		return 0;
@@ -184,21 +177,23 @@
 	Dinosaur.prototype.colliders = function(offset) {
 		var y = this.y - this.jumpHeight(offset);
 		return [{
-			x: this.x + offset,
-			y: y - 20,
-			width: 30,
-			height: 16
-		}, {
-			x: this.x + offset + 12,
-			y: y + 2,
-			width: 15,
-			height: 20
-		}, {
-			x: this.x + offset + 30,
-			y: y - 34,
-			width: 25,
-			height: 20
-		}];
+			x: this.x + offset+10,
+			y: y - 45,
+			width: 24,
+			height: 48
+		}, 
+		//{
+		// 	x: this.x + offset,
+		// 	y: y + 2,
+		// 	width: 15,
+		// 	height: 20
+		// }, {
+		// 	x: this.x + offset + 30,
+		// 	y: y - 34,
+		// 	width: 25,
+		// 	height: 20
+		// }
+	];
 	};
 
 

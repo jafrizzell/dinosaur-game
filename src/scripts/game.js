@@ -9,6 +9,7 @@ import Chat from "twitch-chat-emotes";
 	var GROUND_BUFFER = 10;
 	var SPACE_BAR_CODE = 32;
 	var MIN_CACTUS_DISTANCE = 400;
+	var MAX_CACTUS_DISTANCE = 700;
 	const emoteArray = [];
 	let channels = ['moonmoon'];
 
@@ -34,6 +35,10 @@ import Chat from "twitch-chat-emotes";
 			spacePressed = false;
         }
     }
+
+	function auto_jump() {
+		spacePressed = true;
+	}
 
 	document.addEventListener('keydown', keydown, false);
 	document.addEventListener('keyup', keyup, false);
@@ -112,7 +117,7 @@ import Chat from "twitch-chat-emotes";
 					}));
 				}
 	
-				this.nextCactus = this.offset + rand(MIN_CACTUS_DISTANCE, this.canvas.width);
+				this.nextCactus = this.offset + rand(MIN_CACTUS_DISTANCE, MAX_CACTUS_DISTANCE);
 			}
 		}
 	};
@@ -164,15 +169,24 @@ import Chat from "twitch-chat-emotes";
 			this.removeOldCacti();
 			this.updateCacti();
 
+			for (var i = 0; i < this.cacti.length; i++) { 
+				if ((this.cacti[i].x - this.offset) < 90 && this.cacti[i].x > 0) {
+					console.log(Math.abs(this.cacti[i].x - this.offset));
+					auto_jump();
+
+				}
+			}
+
 			if (!this.player.isJumping(this.offset) && spacePressed) {
 				this.player.startJump(this.offset);
 			}
-
+			
 			this.checkCactusHit();
 			this.draw();
 		} else if (spacePressed) {
 			this.running = true;
 		}
+		spacePressed = false;
 
 		if (!this.finished) {
 			this.lastTick = timestamp;
