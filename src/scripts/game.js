@@ -51,6 +51,17 @@ import Chat from "twitch-chat-emotes";
 		ctrlPressed = true;
 	}
 
+	const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+	const deathTimer = async () => {
+		await sleep(1500)
+		console.log('zzz')
+		document.getElementById('game').style.background = 'none';
+				
+		new Game({
+			el: document.getElementById("game")
+		});
+	}
+
 	document.addEventListener('keydown', keydown, false);
 	document.addEventListener('keyup', keyup, false);
 
@@ -185,12 +196,15 @@ import Chat from "twitch-chat-emotes";
 	Game.prototype.checkCactusHit = function() {
 		for (var i = 0; i < this.cacti.length; i++) {
 			if (this.player.collidesWith(this.cacti[i], this.offset)) {
+				const start_death = Date.now();
+				var end_death = Date.now();
 				this.running = false;
 				this.finished = true;
 				this.player.wideEyed = true;
 				this.background.dead = true; 
 				document.getElementById('game').style.background = 'url("https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/Deadlole.gif?raw=true") no-repeat center';
-				this.background.draw(this.context, this.offset);
+				// this.background.draw(this.context, this.offset);
+				deathTimer();
 				return;
 			}
 		}
@@ -219,7 +233,7 @@ import Chat from "twitch-chat-emotes";
 					if (this.cacti[i].type == 1) {
 						
 						const pick = Math.random();
-						if (pick < 0.5) {
+						if (pick < 0.3) {
 								auto_jump();
 						}
 						else {

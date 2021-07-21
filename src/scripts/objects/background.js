@@ -40,7 +40,7 @@
 		context.drawImage(moonLogo, moon_pos, 0, 400, 200);
 		var deadLoleText = new Image();
 		deadLoleText.src = 'https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/deadlole.JPG?raw=true';
-
+		deadLoleText.onload = function() {}
 		if (this.dead) {
 			context.drawImage(deadLoleText, this.width/2-65, this.height/2+90, 130, 27);
 		}
