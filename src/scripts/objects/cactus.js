@@ -25,9 +25,11 @@
 			const emote = this.emoteGroup[i].emotes[0];
 			context.drawImage(emote.gif.canvas, x+(50*scale*i) - (Date.now()- this.spawn) * this.speed_mult, y-50*scale, 50*scale, 50*scale);
 		}
-		context.fillStyle = 'white';
-		context.fillRect(this.x-offset - (Date.now() - this.spawn) * this.speed_mult, this.y-50*this.scale, 
-							50 * this.scale * this.emoteGroup.length, 50 * this.scale);
+		// to visualize hitboxes (for debug)
+		
+		// context.fillStyle = 'white';
+		// context.fillRect(this.x-offset - (Date.now() - this.spawn) * this.speed_mult, this.y-50*this.scale, 
+		// 					50 * this.scale * this.emoteGroup.length, 50 * this.scale);
 	}; 
 
 	Cactus.prototype.colliders = function(offset) {

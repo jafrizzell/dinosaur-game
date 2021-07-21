@@ -11,7 +11,7 @@ import Chat from "twitch-chat-emotes";
 	var MIN_CACTUS_DISTANCE = 450;
 	var MAX_CACTUS_DISTANCE = 850;
 	const emoteArray = [];
-	let channels = ['moonmoon'];
+	let channels = ['moonmoon', 'anny', 'kyle', 'xqcow'];
 
 
 	// the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
@@ -141,7 +141,7 @@ import Chat from "twitch-chat-emotes";
 						spawn: spawn,
 						speed_mult: speed_mult,
 						left: x + (count * 20 * scale),
-						bottom: this.canvas.height - GROUND_BUFFER - type*40,
+						bottom: this.canvas.height - GROUND_BUFFER - type*42,
 						buffer: GROUND_BUFFER,
 						scale: scale,
 						leftSize: rand(0.5, 1.5), 

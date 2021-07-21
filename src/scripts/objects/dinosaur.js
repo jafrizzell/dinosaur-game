@@ -2,7 +2,7 @@
 	var STEP_SPEED = 0.02;
 	var JUMP_DISTANCE = 350;
 	var JUMP_HEIGHT = 150;
-	var GUNCH_DISTANCE = 150;
+	var GUNCH_DISTANCE = 225;
 	var GUNCH_HEIGHT = 0;
 
 	function Dinosaur(options) {
@@ -79,10 +79,15 @@
 
 	Dinosaur.prototype.draw = function(context, offset) {
 		var x = this.x,
+			xgunch = 0,
+			ygunch = 0,
 			offsetY = this.y - this.jumpHeight(offset),
 			y = offsetY;
-		if (this.gunchStart != null) {
-			var offsetY = this.y - this.gunchHeight(offset);
+
+		if (this.gunchStart != null && this.gunchDistanceRemaining(offset) > 0) {
+			offsetY = this.y - this.gunchHeight(offset);
+			xgunch = 5;  
+			ygunch = 9;
 		}
 
 		context.fillStyle = "#514f59";
@@ -121,14 +126,6 @@
 		context.fillRect(x + 5*xscale, y - 7*yscale, 1*xscale, 1*yscale);
 		context.fillRect(x + 8*xscale, y - 7*yscale, 1*xscale, 1*yscale);
 
-		var xgunch = 0;
-		var ygunch = 0;
-
-		if (this.gunchStart != null) {
-			xgunch = 5;
-			ygunch = 8;
-		}
-
 		if (this.wideEyed) {
 			// head & hair
 			context.fillStyle = "#cca951";
@@ -150,7 +147,7 @@
 			context.fillRect(x + 6*xscale + xgunch, y - 11*yscale + ygunch, 4*xscale, 1*yscale);
 			context.fillRect(x + 7*xscale + xgunch, y - 12*yscale + ygunch, 1*xscale, 1*yscale);
 			context.fillStyle = "#000000"
-			context.fillRect(x + 6*xscale + xgunch, y - 14*yscale, 1*xscale, 2*yscale);
+			context.fillRect(x + 6*xscale + xgunch, y - 14*yscale + ygunch, 1*xscale, 2*yscale);
 
 		} else {
 			// head & hair
@@ -173,7 +170,7 @@
 			context.fillRect(x + 6*xscale + xgunch, y - 11*yscale + ygunch, 4*xscale, 1*yscale);
 			context.fillRect(x + 7*xscale + xgunch, y - 12*yscale + ygunch, 1*xscale, 1*yscale);
 			context.fillStyle = "#000000"
-			context.fillRect(x + 6*xscale + xgunch, y - 14*yscale, 1*xscale, 2*yscale);
+			context.fillRect(x + 6*xscale + xgunch, y - 14*yscale + ygunch, 1*xscale, 2*yscale);
 		}
 
 		if (this.wideEyed) {
@@ -202,22 +199,23 @@
 		context.fillRect(x + 2*xscale, y - 2*yscale, 3*xscale, 2*yscale);
 		context.fillRect(x + 5*xscale, y - 1*yscale, 1*xscale, 1*yscale);
 
-		context.fillStyle = 'white';
+		// to visualize hitboxes (for debug)
 
-		var y = this.y - this.jumpHeight(offset);
-		var ygunch = 0;
-		if (this.isGunching && this.gunchDistanceRemaining > 0) {
-			ygunch = 8;
-			y = this.y - this.gunchHeight(offset);
-		}
-		context.fillRect(this.x, y - 45 + ygunch, 26, 48-ygunch);
+		// context.fillStyle = 'white';
+		// var y = this.y - this.jumpHeight(offset);
+		// var ygunch = 0;
+		// if (this.isGunching && this.gunchDistanceRemaining(offset) > 0) {
+		// 	ygunch = 9;
+		// 	y = this.y - this.gunchHeight(offset);
+		// }
+		// context.fillRect(this.x, y - 45 + ygunch, 26, 48-ygunch);
 	};
 
 	Dinosaur.prototype.colliders = function(offset) {
 		var y = this.y - this.jumpHeight(offset);
 		var ygunch = 0;
-		if (this.isGunching && this.gunchDistanceRemaining > 0) {
-			ygunch = 8;
+		if (this.isGunching && this.gunchDistanceRemaining(offset) > 0) {
+			ygunch = 9;
 			y = this.y - this.gunchHeight(offset);
 		}
 		return [{
