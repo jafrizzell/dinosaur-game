@@ -18,6 +18,7 @@
 		this.height = options.height;
 		this.colour = options.colour;
 		this.bits = generateBits(this.width, this.height);
+		this.dead = options.dead;
 	}
 
 	Background.prototype = Object.create(GameObject.prototype);
@@ -31,8 +32,12 @@
 		var moonLogo = new Image();
 		moonLogo.src = 'https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/chromaLogo_000000.png?raw=true';
 		context.drawImage(moonLogo, 0, 0, 400, 200);
+		var deadLoleText = new Image();
+		deadLoleText.src = 'https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/deadlole.JPG?raw=true';
 
-
+		if (this.dead) {
+			context.drawImage(deadLoleText, this.width/2-65, this.height/2+90, 130, 27);
+		}
 
 		for (let i = this.bits.length - 1; i >= 0; i--) {
 			context.fillRect(this.width - ((this.bits[i].x + offset) % this.width), this.bits[i].y, this.bits[i].width, 1);

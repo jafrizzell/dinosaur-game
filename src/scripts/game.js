@@ -96,6 +96,7 @@ import Chat from "twitch-chat-emotes";
 			context: this.context, 
 			width: this.canvas.width, 
 			height: this.canvas.height - GROUND_BUFFER,
+			dead: false,
 			colour: DEFAULT_COLOUR
 		});
 
@@ -187,12 +188,9 @@ import Chat from "twitch-chat-emotes";
 				this.running = false;
 				this.finished = true;
 				this.player.wideEyed = true;
-				var deadLole = new Image();
-				deadLole.src = 'https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/Deadlole.gif?raw=true';
-				this.context.drawImage(deadLole, 904, 500, 112, 112);
-				var deadLoleText = new Image();
-				deadLoleText.src = 'https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/deadlole.JPG?raw=true';
-				this.context.drawImage(deadLoleText, 848, 612, 214, 54);
+				this.background.dead = true; 
+				document.getElementById('game').style.background = 'url("https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/Deadlole.gif?raw=true") no-repeat center';
+				this.background.draw(this.context, this.offset);
 				return;
 			}
 		}
