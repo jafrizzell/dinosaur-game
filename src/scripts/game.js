@@ -187,6 +187,12 @@ import Chat from "twitch-chat-emotes";
 				this.running = false;
 				this.finished = true;
 				this.player.wideEyed = true;
+				var deadLole = new Image();
+				deadLole.src = 'https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/Deadlole.gif?raw=true';
+				this.context.drawImage(deadLole, 904, 500, 112, 112);
+				var deadLoleText = new Image();
+				deadLoleText.src = 'https://github.com/jafrizzell/dinosaur-game/blob/main/src/scripts/deadlole.JPG?raw=true';
+				this.context.drawImage(deadLoleText, 848, 612, 214, 54);
 				return;
 			}
 		}
