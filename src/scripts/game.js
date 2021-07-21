@@ -11,7 +11,7 @@ import Chat from "twitch-chat-emotes";
 	var MIN_CACTUS_DISTANCE = 450;
 	var MAX_CACTUS_DISTANCE = 850;
 	const emoteArray = [];
-	let channels = ['moonmoon', 'anny', 'kyle', 'xqcow'];
+	let channels = ['moonmoon'];
 
 
 	// the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
@@ -190,7 +190,7 @@ import Chat from "twitch-chat-emotes";
 
 		this.player.drawColliders(this.context, this.offset);
 		this.player.draw(this.context, this.offset);
-		this.score.draw(this.context, this.offset);
+		// this.score.draw(this.context, this.offset);
 	};
 
 	Game.prototype.checkCactusHit = function() {
