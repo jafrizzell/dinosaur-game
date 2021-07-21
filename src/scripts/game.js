@@ -11,7 +11,7 @@ import Chat from "twitch-chat-emotes";
 	var MIN_CACTUS_DISTANCE = 450;
 	var MAX_CACTUS_DISTANCE = 850;
 	const emoteArray = [];
-	let channels = ['moonmoon','a_seagull', 'kyle', 'itsryanhiga', 'Arcadum', 'LIRIK'];
+	let channels = ['moonmoon'];
 
 
 	// the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
@@ -24,20 +24,31 @@ import Chat from "twitch-chat-emotes";
 	}
 
 	var spacePressed = false;
+	var ctrlPressed = false;
 	function keydown(e) {
         if (e.keyCode === SPACE_BAR_CODE) {
 			spacePressed = true;
         }
+		if (e.keyCode === 17) {
+			ctrlPressed = true;
+		}
     }
 
     function keyup(e) {
         if (e.keyCode === SPACE_BAR_CODE) {
 			spacePressed = false;
         }
+		if (e.keyCode === 17) {
+			ctrlPressed = false;
+		}
     }
 
 	function auto_jump() {
 		spacePressed = true;
+	}
+
+	function auto_gunch() {
+		ctrlPressed = true;
 	}
 
 	document.addEventListener('keydown', keydown, false);
@@ -66,7 +77,7 @@ import Chat from "twitch-chat-emotes";
 		this.nextCactus = 0;
 		this.offset = 0;
 		this.lastTick = null;
-		this.running = false;
+		this.running = true;
 		this.finished = false;
 		this.initObjects();
 		this.draw();
@@ -78,7 +89,6 @@ import Chat from "twitch-chat-emotes";
 			context: this.context, 
 			left: 175, 
 			bottom: this.canvas.height - GROUND_BUFFER,
-			gunching: false,
 			colour: DEFAULT_COLOUR
 		});
 
@@ -148,7 +158,6 @@ import Chat from "twitch-chat-emotes";
 
 	Game.prototype.removeOldCacti = function() {
 		var count = 0; // used to force cacti off the screen
-		this.player.gunching = false;
 
 		while (this.cacti.length > count && this.cacti[count].x < this.offset - SCREEN_BUFFER) { 
 			count++; 
@@ -175,7 +184,6 @@ import Chat from "twitch-chat-emotes";
 	Game.prototype.checkCactusHit = function() {
 		for (var i = 0; i < this.cacti.length; i++) {
 			if (this.player.collidesWith(this.cacti[i], this.offset)) {
-				console.log(this.offset, this.cacti[i].x, this.cacti[i].x - 0.075 * (Date.now() - this.cacti[i].spawn) - 200);
 				this.running = false;
 				this.finished = true;
 				this.player.wideEyed = true;
@@ -196,9 +204,10 @@ import Chat from "twitch-chat-emotes";
 			for (var i = 0; i < this.cacti.length; i++) { 
 				
 				// Fake_offset keeps track of where the hitbox actually is, since birds stray from the offset they were spawned at
-				var linear = 0
-				if (this.cacti[i].type != 0) {linear = 200;}
-				const fake_offset = this.cacti[i].x - 0.075 * (Date.now() - this.cacti[i].spawn) - linear;
+				var linear = 0;
+				var speed_val = 0.06;
+				if (this.cacti[i].type != 0) {linear = 200; speed_val = 0.075;}
+				const fake_offset = this.cacti[i].x - speed_val * (Date.now() - this.cacti[i].spawn) - linear;
 				if (Math.abs(fake_offset - this.offset) < 120 && this.offset < fake_offset) {
 					if (this.cacti[i].type == 0) {
 						auto_jump();
@@ -206,28 +215,33 @@ import Chat from "twitch-chat-emotes";
 					if (this.cacti[i].type == 1) {
 						
 						const pick = Math.random();
-						if (pick < 0.5 && this.player.gunching == false) {
-							auto_jump();
+						if (pick < 0.5) {
+								auto_jump();
 						}
 						else {
-							const gunch = true;
+							auto_gunch();
 						}
 					}
 				}
 			}
 
-			if (!this.player.isJumping(this.offset) && spacePressed) {
+			if (!this.player.isJumping(this.offset) && !this.player.isGunching(this.offset) && spacePressed) {
 				this.player.startJump(this.offset);
 			}
-			// try {this.player.gunching = gunch;}
-			// catch {}
+			if (!this.player.isGunching(this.offset) && !this.player.isJumping(this.offset) && ctrlPressed){
+				this.player.startGunch(this.offset);
+			}
 
 			this.checkCactusHit();
 			this.draw();
 		} else if (spacePressed) {
 			this.running = true;
+		} else if (ctrlPressed) {
+			this.running = true;
 		}
+		
 		spacePressed = false;
+		ctrlPressed = false;
 
 		if (!this.finished) {
 			this.lastTick = timestamp;

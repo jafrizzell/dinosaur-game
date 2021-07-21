@@ -2,6 +2,8 @@
 	var STEP_SPEED = 0.02;
 	var JUMP_DISTANCE = 350;
 	var JUMP_HEIGHT = 150;
+	var GUNCH_DISTANCE = 150;
+	var GUNCH_HEIGHT = 0;
 
 	function Dinosaur(options) {
 		this.scale = options.scale;
@@ -9,10 +11,11 @@
 		this.y = options.bottom;
 		this.colour = options.colour;
 		this.jumpStart = null;
+		this.gunchStart = null
 		this.jumpStartTime = 0;
+		this.gunchStartTime = 0
 		this.gravity = 1600;
 		this.initYVel = 700;
-		this.gunching = options.gunching;
 	}
 
 	Dinosaur.prototype = Object.create(GameObject.prototype);
@@ -22,14 +25,29 @@
 		return this.jumpStart !== null && this.jumpDistanceRemaining(offset) > 0;
 	};
 
+	Dinosaur.prototype.isGunching = function(offset){
+		return this.gunchStart !== null && this.gunchDistanceRemaining(offset) > 0;
+	}
+
 	Dinosaur.prototype.jumpDistanceRemaining = function(offset) {
 		if (this.jumpStart === null) return 0;
 		return this.jumpStart + JUMP_DISTANCE - offset;
 	};
 
+	Dinosaur.prototype.gunchDistanceRemaining = function(offset) {
+		if (this.gunchStart === null) return 0;
+		return this.gunchStart + GUNCH_DISTANCE - offset;
+	};
+
+	
 	Dinosaur.prototype.startJump = function(offset) {
 		this.jumpStart = offset;
 		this.jumpStartTime = Date.now();
+	};
+
+	Dinosaur.prototype.startGunch = function(offset) {
+		this.gunchStart = offset;
+		this.gunchStartTime = Date.now();
 	};
 
 	Dinosaur.prototype.jumpHeight = function (offset) {
@@ -41,6 +59,15 @@
 		}
 		return 0;
 	};
+
+	Dinosaur.prototype.gunchHeight = function (offset) {
+		var distanceRemaining = this.gunchDistanceRemaining(offset);
+		if (distanceRemaining > 0) {
+			y_pos = 1;
+			return y_pos;
+		}
+		return 0;
+	}
 
 	Dinosaur.prototype.hasBackLegUp = function(offset) {
 		return offset > 0 && Math.floor(offset * STEP_SPEED) % 2 === 0;
@@ -54,6 +81,9 @@
 		var x = this.x,
 			offsetY = this.y - this.jumpHeight(offset),
 			y = offsetY;
+		if (this.gunchStart != null) {
+			var offsetY = this.y - this.gunchHeight(offset);
+		}
 
 		context.fillStyle = "#514f59";
 		
@@ -94,7 +124,7 @@
 		var xgunch = 0;
 		var ygunch = 0;
 
-		if (this.gunching) {
+		if (this.gunchStart != null) {
 			xgunch = 5;
 			ygunch = 8;
 		}
@@ -172,16 +202,24 @@
 		context.fillRect(x + 2*xscale, y - 2*yscale, 3*xscale, 2*yscale);
 		context.fillRect(x + 5*xscale, y - 1*yscale, 1*xscale, 1*yscale);
 
-		// context.fillStyle = 'white';
-		// context.fillRect(this.x, y - 45 - ygunch, 26, 48-ygunch);
+		context.fillStyle = 'white';
+
+		var y = this.y - this.jumpHeight(offset);
+		var ygunch = 0;
+		if (this.isGunching && this.gunchDistanceRemaining > 0) {
+			ygunch = 8;
+			y = this.y - this.gunchHeight(offset);
+		}
+		context.fillRect(this.x, y - 45 + ygunch, 26, 48-ygunch);
 	};
 
 	Dinosaur.prototype.colliders = function(offset) {
 		var y = this.y - this.jumpHeight(offset);
-		if (this.gunching) {
-			var ygunch = 8;
+		var ygunch = 0;
+		if (this.isGunching && this.gunchDistanceRemaining > 0) {
+			ygunch = 8;
+			y = this.y - this.gunchHeight(offset);
 		}
-		else {var ygunch = 0;}
 		return [{
 			x: this.x,
 			y: y - 45 + ygunch,
