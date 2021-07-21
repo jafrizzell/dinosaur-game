@@ -8,10 +8,10 @@ import Chat from "twitch-chat-emotes";
 	var SCREEN_BUFFER = 50;
 	var GROUND_BUFFER = 100;
 	var SPACE_BAR_CODE = 32;
-	var MIN_CACTUS_DISTANCE = 400;
-	var MAX_CACTUS_DISTANCE = 700;
+	var MIN_CACTUS_DISTANCE = 450;
+	var MAX_CACTUS_DISTANCE = 850;
 	const emoteArray = [];
-	let channels = ['moonmoon','a_seagull', 'pokimane'];
+	let channels = ['moonmoon','a_seagull', 'kyle', 'itsryanhiga', 'Arcadum', 'LIRIK'];
 
 
 	// the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
@@ -76,8 +76,9 @@ import Chat from "twitch-chat-emotes";
 	Game.prototype.initObjects = function() {
 		this.player = new Dinosaur({
 			context: this.context, 
-			left: 10, 
+			left: 175, 
 			bottom: this.canvas.height - GROUND_BUFFER,
+			gunching: false,
 			colour: DEFAULT_COLOUR
 		});
 
@@ -100,15 +101,37 @@ import Chat from "twitch-chat-emotes";
 		if (emoteArray.length > 1) {
 			while (this.offset > this.nextCactus) {
 				var count = Math.floor(rand(1, 1.9)),
-					scale = rand(0.7, 1.4),
+					scale = rand(0.7, 1.2),
 					x = this.canvas.width + this.offset + SCREEN_BUFFER;
+				var scale_num = 1;
+				var speed_mult = 0;
+				const spawn = Date.now();
+
+				// type of 0 = cactus, type of 1 == low bird, type of 2 = high bird
+				var type = Math.floor(rand(0, 2.9));
+
+				if (scale < 1.1) {
+					scale_num = Math.floor(rand(1, 2.9));
+				}
+				if (scale < 0.85) {
+					scale_num = Math.floor(rand(1, 3.9));
+				}
+
+				if (type == 1 || type == 2) {
+					scale_num = 1;
+					scale = 0.7;
+					speed_mult = 0.075;
+				}
 	
 				while (count--) {
-					const emoteGroup = emoteArray[emoteArray.length-1];
+					const emoteGroup = emoteArray.slice(-scale_num);
 					this.cacti.push(new Cactus({
 						emoteGroup, 
-						left: x + (count * 20 * scale), 
-						bottom: this.canvas.height - GROUND_BUFFER,
+						type: type,
+						spawn: spawn,
+						speed_mult: speed_mult,
+						left: x + (count * 20 * scale),
+						bottom: this.canvas.height - GROUND_BUFFER - type*40,
 						buffer: GROUND_BUFFER,
 						scale: scale,
 						leftSize: rand(0.5, 1.5), 
@@ -125,6 +148,7 @@ import Chat from "twitch-chat-emotes";
 
 	Game.prototype.removeOldCacti = function() {
 		var count = 0; // used to force cacti off the screen
+		this.player.gunching = false;
 
 		while (this.cacti.length > count && this.cacti[count].x < this.offset - SCREEN_BUFFER) { 
 			count++; 
@@ -139,7 +163,7 @@ import Chat from "twitch-chat-emotes";
 		this.background.draw(this.context, this.offset);
 
 		for (var i = 0; i < this.cacti.length; i++) {
-			this.cacti[i].drawColliders(this.context, this.offset);
+			this.cacti[i].drawColliders(this.context, this.offset+this.cacti[i].speed_mult);
 			this.cacti[i].draw(this.context, this.offset);
 		}
 
@@ -151,6 +175,7 @@ import Chat from "twitch-chat-emotes";
 	Game.prototype.checkCactusHit = function() {
 		for (var i = 0; i < this.cacti.length; i++) {
 			if (this.player.collidesWith(this.cacti[i], this.offset)) {
+				console.log(this.offset, this.cacti[i].x, this.cacti[i].x - 0.075 * (Date.now() - this.cacti[i].spawn) - 200);
 				this.running = false;
 				this.finished = true;
 				this.player.wideEyed = true;
@@ -166,21 +191,37 @@ import Chat from "twitch-chat-emotes";
 	Game.prototype.step = function(timestamp) {
 		if (this.running && this.lastTick) {
 			this.offset += Math.min((timestamp - this.lastTick), MAX_TIME_TICK) * OFFSET_SPEED;
-
 			this.removeOldCacti();
 			this.updateCacti();
-
 			for (var i = 0; i < this.cacti.length; i++) { 
-				if ((this.cacti[i].x - this.offset) < 90 && this.cacti[i].x > 0) {
-					auto_jump();
-
+				
+				// Fake_offset keeps track of where the hitbox actually is, since birds stray from the offset they were spawned at
+				var linear = 0
+				if (this.cacti[i].type != 0) {linear = 200;}
+				const fake_offset = this.cacti[i].x - 0.075 * (Date.now() - this.cacti[i].spawn) - linear;
+				if (Math.abs(fake_offset - this.offset) < 120 && this.offset < fake_offset) {
+					if (this.cacti[i].type == 0) {
+						auto_jump();
+					}
+					if (this.cacti[i].type == 1) {
+						
+						const pick = Math.random();
+						if (pick < 0.5 && this.player.gunching == false) {
+							auto_jump();
+						}
+						else {
+							const gunch = true;
+						}
+					}
 				}
 			}
 
 			if (!this.player.isJumping(this.offset) && spacePressed) {
 				this.player.startJump(this.offset);
 			}
-			
+			// try {this.player.gunching = gunch;}
+			// catch {}
+
 			this.checkCactusHit();
 			this.draw();
 		} else if (spacePressed) {

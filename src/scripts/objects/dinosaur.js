@@ -10,8 +10,9 @@
 		this.colour = options.colour;
 		this.jumpStart = null;
 		this.jumpStartTime = 0;
-		this.gravity = 1400;
-		this.initYVel = 600;
+		this.gravity = 1600;
+		this.initYVel = 700;
+		this.gunching = options.gunching;
 	}
 
 	Dinosaur.prototype = Object.create(GameObject.prototype);
@@ -90,53 +91,59 @@
 		context.fillRect(x + 5*xscale, y - 7*yscale, 1*xscale, 1*yscale);
 		context.fillRect(x + 8*xscale, y - 7*yscale, 1*xscale, 1*yscale);
 
+		var xgunch = 0;
+		var ygunch = 0;
+
+		if (this.gunching) {
+			xgunch = 5;
+			ygunch = 8;
+		}
 
 		if (this.wideEyed) {
 			// head & hair
 			context.fillStyle = "#cca951";
-			context.fillRect(x + 2*xscale, y - 16*yscale, 6*xscale, 7*yscale);
-			context.fillRect(x + 1*xscale, y - 13*yscale, 1*xscale, 2*yscale);
-			context.fillRect(x + 7*xscale, y - 16*yscale, 1*xscale, 6*yscale);
-			context.fillRect(x + 8*xscale, y - 13*yscale, 1*xscale, 4*yscale);
-			context.fillRect(x + 9*xscale, y - 13*yscale, 1*xscale, 3*yscale);
-			context.fillRect(x + 8*xscale, y - 14*yscale, 1*xscale, 1*yscale);
-			context.fillRect(x + 6.5*xscale, y - 15.5*yscale, 1*xscale, 1*yscale);
+			context.fillRect(x + 2*xscale + xgunch, y - 16*yscale + ygunch, 6*xscale, 7*yscale);
+			context.fillRect(x + 1*xscale + xgunch, y - 13*yscale + ygunch, 1*xscale, 2*yscale);
+			context.fillRect(x + 7*xscale + xgunch, y - 16*yscale + ygunch, 1*xscale, 6*yscale);
+			context.fillRect(x + 8*xscale + xgunch, y - 13*yscale + ygunch, 1*xscale, 4*yscale);
+			context.fillRect(x + 9*xscale + xgunch, y - 13*yscale + ygunch, 1*xscale, 3*yscale);
+			context.fillRect(x + 8*xscale + xgunch, y - 14*yscale + ygunch, 1*xscale, 1*yscale);
 			context.fillStyle = "#231d10";
-			context.fillRect(x, y - 14*yscale, 1*xscale, 4*yscale);
-			context.fillRect(x + 1*xscale, y - 15*yscale, 1*xscale, 2*yscale);
-			context.fillRect(x + 2*xscale, y - 16*yscale, 1*xscale, 5*yscale);
-			context.fillRect(x + 2*xscale, y - 16*yscale, 1*xscale, 5*yscale);
-			context.fillRect(x + 3*xscale, y - 16*yscale, 2*xscale, 1*yscale);
-			context.fillRect(x + 3*xscale, y - 14*yscale, 1*xscale, 1*yscale);
-			context.fillRect(x + 3*xscale, y - 12*yscale, 1*xscale, 1*yscale);
-			context.fillRect(x + 1*xscale, y - 11*yscale, 1*xscale, 1*yscale);
-			context.fillRect(x + 6*xscale, y - 11*yscale, 4*xscale, 1*yscale);
-			context.fillRect(x + 7*xscale, y - 12*yscale, 1*xscale, 1*yscale);
+			context.fillRect(x + xgunch, y - 14*yscale + ygunch, 1*xscale, 4*yscale);
+			context.fillRect(x + 1*xscale + xgunch, y - 15*yscale + ygunch, 1*xscale, 2*yscale);
+			context.fillRect(x + 2*xscale + xgunch, y - 16*yscale + ygunch, 1*xscale, 5*yscale);
+			context.fillRect(x + 2*xscale + xgunch, y - 16*yscale + ygunch, 1*xscale, 5*yscale);
+			context.fillRect(x + 3*xscale + xgunch, y - 16*yscale + ygunch, 2*xscale, 1*yscale);
+			context.fillRect(x + 3*xscale + xgunch, y - 14*yscale + ygunch, 1*xscale, 1*yscale);
+			context.fillRect(x + 3*xscale + xgunch, y - 12*yscale + ygunch, 1*xscale, 1*yscale);
+			context.fillRect(x + 1*xscale + xgunch, y - 11*yscale + ygunch, 1*xscale, 1*yscale);
+			context.fillRect(x + 6*xscale + xgunch, y - 11*yscale + ygunch, 4*xscale, 1*yscale);
+			context.fillRect(x + 7*xscale + xgunch, y - 12*yscale + ygunch, 1*xscale, 1*yscale);
 			context.fillStyle = "#000000"
-			context.fillRect(x + 6*xscale, y - 14*yscale, 1*xscale, 2*yscale);
+			context.fillRect(x + 6*xscale + xgunch, y - 14*yscale, 1*xscale, 2*yscale);
 
 		} else {
 			// head & hair
 			context.fillStyle = "#cca951";
-			context.fillRect(x + 2*xscale, y - 16*yscale, 6*xscale, 7*yscale);
-			context.fillRect(x + 1*xscale, y - 13*yscale, 1*xscale, 2*yscale);
-			context.fillRect(x + 7*xscale, y - 16*yscale, 1*xscale, 6*yscale);
-			context.fillRect(x + 8*xscale, y - 13*yscale, 1*xscale, 4*yscale);
-			context.fillRect(x + 9*xscale, y - 13*yscale, 1*xscale, 3*yscale);
-			context.fillRect(x + 8*xscale, y - 14*yscale, 1*xscale, 1*yscale);
+			context.fillRect(x + 2*xscale + xgunch, y - 16*yscale + ygunch, 6*xscale, 7*yscale);
+			context.fillRect(x + 1*xscale + xgunch, y - 13*yscale + ygunch, 1*xscale, 2*yscale);
+			context.fillRect(x + 7*xscale + xgunch, y - 16*yscale + ygunch, 1*xscale, 6*yscale);
+			context.fillRect(x + 8*xscale + xgunch, y - 13*yscale + ygunch, 1*xscale, 4*yscale);
+			context.fillRect(x + 9*xscale + xgunch, y - 13*yscale + ygunch, 1*xscale, 3*yscale);
+			context.fillRect(x + 8*xscale + xgunch, y - 14*yscale + ygunch, 1*xscale, 1*yscale);
 			context.fillStyle = "#231d10";
-			context.fillRect(x, y - 14*yscale, 1*xscale, 4*yscale);
-			context.fillRect(x + 1*xscale, y - 15*yscale, 1*xscale, 2*yscale);
-			context.fillRect(x + 2*xscale, y - 16*yscale, 1*xscale, 5*yscale);
-			context.fillRect(x + 2*xscale, y - 16*yscale, 1*xscale, 5*yscale);
-			context.fillRect(x + 3*xscale, y - 16*yscale, 2*xscale, 1*yscale);
-			context.fillRect(x + 3*xscale, y - 14*yscale, 1*xscale, 1*yscale);
-			context.fillRect(x + 3*xscale, y - 12*yscale, 1*xscale, 1*yscale);
-			context.fillRect(x + 1*xscale, y - 11*yscale, 1*xscale, 1*yscale);
-			context.fillRect(x + 6*xscale, y - 11*yscale, 4*xscale, 1*yscale);
-			context.fillRect(x + 7*xscale, y - 12*yscale, 1*xscale, 1*yscale);
+			context.fillRect(x + xgunch, y - 14*yscale + ygunch, 1*xscale, 4*yscale);
+			context.fillRect(x + 1*xscale + xgunch, y - 15*yscale + ygunch, 1*xscale, 2*yscale);
+			context.fillRect(x + 2*xscale + xgunch, y - 16*yscale + ygunch, 1*xscale, 5*yscale);
+			context.fillRect(x + 2*xscale + xgunch, y - 16*yscale + ygunch, 1*xscale, 5*yscale);
+			context.fillRect(x + 3*xscale + xgunch, y - 16*yscale + ygunch, 2*xscale, 1*yscale);
+			context.fillRect(x + 3*xscale + xgunch, y - 14*yscale + ygunch, 1*xscale, 1*yscale);
+			context.fillRect(x + 3*xscale + xgunch, y - 12*yscale + ygunch, 1*xscale, 1*yscale);
+			context.fillRect(x + 1*xscale + xgunch, y - 11*yscale + ygunch, 1*xscale, 1*yscale);
+			context.fillRect(x + 6*xscale + xgunch, y - 11*yscale + ygunch, 4*xscale, 1*yscale);
+			context.fillRect(x + 7*xscale + xgunch, y - 12*yscale + ygunch, 1*xscale, 1*yscale);
 			context.fillStyle = "#000000"
-			context.fillRect(x + 6*xscale, y - 14*yscale, 1*xscale, 2*yscale);
+			context.fillRect(x + 6*xscale + xgunch, y - 14*yscale, 1*xscale, 2*yscale);
 		}
 
 		if (this.wideEyed) {
@@ -164,15 +171,22 @@
 		// front leg
 		context.fillRect(x + 2*xscale, y - 2*yscale, 3*xscale, 2*yscale);
 		context.fillRect(x + 5*xscale, y - 1*yscale, 1*xscale, 1*yscale);
+
+		// context.fillStyle = 'white';
+		// context.fillRect(this.x, y - 45 - ygunch, 26, 48-ygunch);
 	};
 
 	Dinosaur.prototype.colliders = function(offset) {
 		var y = this.y - this.jumpHeight(offset);
+		if (this.gunching) {
+			var ygunch = 8;
+		}
+		else {var ygunch = 0;}
 		return [{
-			x: this.x + offset+10,
-			y: y - 45,
-			width: 24,
-			height: 48
+			x: this.x,
+			y: y - 45 + ygunch,
+			width: 26,
+			height: 48 - ygunch
 		}, 
 	];
 	};

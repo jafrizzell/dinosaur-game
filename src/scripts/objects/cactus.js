@@ -4,11 +4,14 @@
 		this.x = options.left;
 		this.y = options.bottom;
 		this.buffer = options.buffer;
+		this.spawn = options.spawn;
 		this.colour = options.colour;
 		this.leftSize = options.leftSize;
 		this.centerSize = options.centerSize;
 		this.rightSize = options.rightSize;
 		this.emoteGroup = options.emoteGroup;
+		this.type = options.type;
+		this.speed_mult = options.speed_mult;
 	}
 
 	Cactus.prototype = Object.create(GameObject.prototype);
@@ -17,23 +20,22 @@
 		var x = this.x - offset,
 			y = this.y,
 			scale = this.scale;
-
-		// y is always 580
-		const emote = this.emoteGroup.emotes[0];
-		context.fillStyle = "#1D2E3E";
-		context.fillRect(x, y-50*scale, 50*scale, y-50*scale-this.buffer);
-		context.fillStyle = this.colour;
-		context.fillRect(x, y-50*scale-this.buffer, 50*scale, y-50*scale);
-		context.drawImage(emote.gif.canvas, x, y-50*scale, 50*scale, 50*scale);
-
+			// y is always 580
+		for (var i = this.emoteGroup.length - 1; i >= 0; i--) {
+			const emote = this.emoteGroup[i].emotes[0];
+			context.drawImage(emote.gif.canvas, x+(50*scale*i) - (Date.now()- this.spawn) * this.speed_mult, y-50*scale, 50*scale, 50*scale);
+		}
+		// context.fillStyle = 'white';
+		// context.fillRect(this.x-offset - (Date.now() - this.spawn) * this.speed_mult, this.y-50*this.scale, 
+		// 					50 * this.scale * this.emoteGroup.length, 50 * this.scale);
 	}; 
 
 	Cactus.prototype.colliders = function(offset) {
 		return [{
-			x: this.x,
-			y: this.y,
-			width: 17 * this.scale,
-			height: (20 + (15 * Math.max(this.centerSize, this.leftSize, this.rightSize))) * this.scale
+			x: this.x-offset - (Date.now()- this.spawn) * this.speed_mult,
+			y: this.y-50*this.scale,
+			width: 50 * this.scale * this.emoteGroup.length,
+			height: 50 * this.scale,
 		}];
 	};
 
