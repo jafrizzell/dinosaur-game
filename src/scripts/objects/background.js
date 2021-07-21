@@ -28,6 +28,8 @@
 		context.fillRect(0, this.height-20, this.width, this.height+20);
 		context.fillStyle = '#000000';
 		context.fillRect(0, this.height - 20, this.width, 1);
+		context.fillStyle = '#ffffff';
+		
 
 		for (let i = this.bits.length - 1; i >= 0; i--) {
 			context.fillRect(this.width - ((this.bits[i].x + offset) % this.width), this.bits[i].y, this.bits[i].width, 1);
