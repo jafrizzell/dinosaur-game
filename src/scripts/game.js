@@ -11,7 +11,9 @@ import Chat from "twitch-chat-emotes";
 	var MIN_CACTUS_DISTANCE = 450;
 	var MAX_CACTUS_DISTANCE = 850;
 	const emoteArray = [];
-	let channels = ['moonmoon'];
+	const cloudArray = [];
+	var cloudEmotes = [];
+	let channels = ['moonmoon', 'projektmelody', 'shroud', 'loltyler1'];
 
 
 	// the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
@@ -53,7 +55,7 @@ import Chat from "twitch-chat-emotes";
 
 	const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 	const deathTimer = async () => {
-		await sleep(1500)
+		await sleep(1700)
 		console.log('zzz')
 		document.getElementById('game').style.background = 'none';
 				
@@ -77,6 +79,14 @@ import Chat from "twitch-chat-emotes";
 				emoteArray.shift();
 			}
 			emoteArray.push({
+				emotes
+			});
+
+			if (cloudArray.length > 20) {
+				cloudEmotes = cloudArray.splice(-10);
+				cloudArray.length = 0;
+			}
+			cloudArray.push({
 				emotes
 			});
 		})
@@ -120,6 +130,28 @@ import Chat from "twitch-chat-emotes";
 	};
 
 	Game.prototype.updateCacti = function() {
+		if (cloudEmotes.length != 0) {
+			const type = 3;
+			const spawn = Date.now();
+			console.log(cloudEmotes);
+			for (var i = 0; i < cloudEmotes.length; i++) {
+				console.log(i)
+				let emoteGroup = cloudEmotes[i];
+				var scale = rand(0.75, 1);
+				this.cacti.push( new Cactus({
+					emoteGroup,
+					type: 3,
+					spawn: spawn,
+					speed_mult: -0.05,
+					left: this.canvas.width + this.offset + SCREEN_BUFFER + rand(0, 200),
+					bottom: this.canvas.height - GROUND_BUFFER - type*100 - rand(0, 100),
+					buffer: GROUND_BUFFER,
+					scale: scale,
+				}));
+			}
+			cloudEmotes = [];
+		}
+
 		if (emoteArray.length > 1) {
 			while (this.offset > this.nextCactus) {
 				var count = Math.floor(rand(1, 1.9)),
@@ -155,11 +187,7 @@ import Chat from "twitch-chat-emotes";
 						left: x + (count * 20 * scale),
 						bottom: this.canvas.height - GROUND_BUFFER - type*42,
 						buffer: GROUND_BUFFER,
-						scale: scale,
-						leftSize: rand(0.5, 1.5), 
-						rightSize: rand(0.5, 1.5), 
-						centerSize: rand(0.5, 1.5),
-						colour: DEFAULT_COLOUR
+						scale: scale
 					}));
 				}
 	
@@ -233,7 +261,7 @@ import Chat from "twitch-chat-emotes";
 					if (this.cacti[i].type == 1) {
 						
 						const pick = Math.random();
-						if (pick < 0.3) {
+						if (pick < 0.2) {
 								auto_jump();
 						}
 						else {
